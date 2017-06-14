@@ -6,12 +6,16 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,28 +34,49 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        if (AccessToken.getCurrentAccessToken() != null) {
+            navigateToMainScreen();
+        }
+
         callbackManager = CallbackManager.Factory.create();
-    }
-
-
-    @OnClick(R.id.loginButton)
-    public void onViewClicked() {
+        loginButton.setReadPermissions("email");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Toast.makeText(LoginActivity.this, "login Success", Toast.LENGTH_SHORT).show();
+                navigateToMainScreen();
             }
-
             @Override
             public void onCancel() {
 
             }
-
             @Override
             public void onError(FacebookException error) {
                 Toast.makeText(LoginActivity.this, "login error :"+error, Toast.LENGTH_SHORT).show();
 
             }
         });
+    }
+
+
+    @OnClick(R.id.loginButton)
+    public void onViewClicked() {
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void navigateToMainScreen() {
+        Intent intent = new Intent(this, RecipeMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }
