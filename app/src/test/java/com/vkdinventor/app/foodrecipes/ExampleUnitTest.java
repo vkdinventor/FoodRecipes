@@ -1,6 +1,11 @@
 package com.vkdinventor.app.foodrecipes;
 
+import com.vkdinventor.app.foodrecipes.Entity.RecipeResponse;
+import com.vkdinventor.app.foodrecipes.api.RecipeClient;
+
 import org.junit.Test;
+
+import retrofit2.Call;
 
 import static org.junit.Assert.*;
 
@@ -12,6 +17,12 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+
+
+        RecipeClient recipeClient = new RecipeClient();
+        Call<RecipeResponse> responseCall = recipeClient.getRecipeService().search("c6eb7c8aa8019ce92fff536531d75851",
+                "shredded chicken",1,1);
+
+        System.out.print(responseCall.request().url()+" "+ responseCall.execute().body().getFirstRecipe().getTitle());
     }
 }

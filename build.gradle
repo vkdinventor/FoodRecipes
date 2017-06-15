@@ -15,9 +15,15 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url "https://www.jitpack.io" }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    dbflow_version = "4.0.4"
+    glideVersion = "3.6.1"
 }
