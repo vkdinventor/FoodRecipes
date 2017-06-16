@@ -14,7 +14,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.vkdinventor.app.foodrecipes.R;
-import com.vkdinventor.app.foodrecipes.RecipeMainActivity;
+import com.vkdinventor.app.foodrecipes.recipesmain.ui.RecipeMainActivity;
 
 import java.util.Arrays;
 

@@ -1,13 +1,11 @@
 package com.vkdinventor.app.foodrecipes;
 
-import com.vkdinventor.app.foodrecipes.Entity.RecipeResponse;
+import com.vkdinventor.app.foodrecipes.Entity.RecipeSearchResponse;
 import com.vkdinventor.app.foodrecipes.api.RecipeClient;
 
 import org.junit.Test;
 
 import retrofit2.Call;
-
-import static org.junit.Assert.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -20,7 +18,7 @@ public class ExampleUnitTest {
 
 
         RecipeClient recipeClient = new RecipeClient();
-        Call<RecipeResponse> responseCall = recipeClient.getRecipeService().search("c6eb7c8aa8019ce92fff536531d75851",
+        Call<RecipeSearchResponse> responseCall = recipeClient.getRecipeService().search("c6eb7c8aa8019ce92fff536531d75851",
                 "shredded chicken",1,1);
 
         System.out.print(responseCall.request().url()+" "+ responseCall.execute().body().getFirstRecipe().getTitle());

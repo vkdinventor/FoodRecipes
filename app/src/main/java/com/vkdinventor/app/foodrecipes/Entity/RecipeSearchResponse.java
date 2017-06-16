@@ -9,7 +9,7 @@ import java.util.List;
  * Created by einfochips on 15/6/17.
  */
 
-public class RecipeResponse {
+public class RecipeSearchResponse {
 
     @SerializedName("count")
     @Expose

@@ -1,6 +1,6 @@
 package com.vkdinventor.app.foodrecipes.api;
 
-import com.vkdinventor.app.foodrecipes.Entity.RecipeResponse;
+import com.vkdinventor.app.foodrecipes.Entity.RecipeSearchResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -14,8 +14,8 @@ public interface RecipeService {
 
 
     @GET("search")
-    Call<RecipeResponse> search(@Query("key") String key,
-                                @Query("q") String query,
-                                @Query("count") int count,
-                                @Query("page") int page);
+    Call<RecipeSearchResponse> search(@Query("key") String key,
+                                      @Query("sort") String query,
+                                      @Query("count") int count,
+                                      @Query("page") int page);
 }
