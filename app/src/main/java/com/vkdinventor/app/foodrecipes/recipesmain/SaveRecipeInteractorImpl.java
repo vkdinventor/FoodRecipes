@@ -16,6 +16,6 @@ public class SaveRecipeInteractorImpl implements SaveRecipeInteractor{
 
     @Override
     public void execute(Recipe recipe) {
-
+        repository.getNextRecipe();
     }
 }

@@ -1,18 +1,27 @@
 package com.vkdinventor.app.foodrecipes.recipesmain.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.facebook.login.LoginManager;
 import com.vkdinventor.app.foodrecipes.Entity.Recipe;
 import com.vkdinventor.app.foodrecipes.FacebookRecipesApp;
 import com.vkdinventor.app.foodrecipes.R;
+import com.vkdinventor.app.foodrecipes.UI.login.LoginActivity;
 import com.vkdinventor.app.foodrecipes.libs.base.ImageLoader;
 import com.vkdinventor.app.foodrecipes.recipesmain.RecipeMainPresenter;
 import com.vkdinventor.app.foodrecipes.recipesmain.di.RecipeMainComponent;
@@ -23,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RecipeMainActivity extends AppCompatActivity implements RecipeMainView {
+public class RecipeMainActivity extends AppCompatActivity implements RecipeMainView, SwipeGestureListener{
 
     @BindView(R.id.imgRecipe)
     ImageView imgRecipe;
@@ -39,7 +48,6 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
     RelativeLayout layoutContainer;
 
     private Recipe currentRecipe;
-    private RecipeMainPresenter mainPresenter;
     RecipeMainComponent component;
 
     @Inject
@@ -53,6 +61,8 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
         setContentView(R.layout.activity_recipe_main);
         ButterKnife.bind(this);
         setupInjection();
+        setupGestureDetector();
+        setupImageLoader();
         presenter.getNextRecipe();
         presenter.onCreate();
     }
@@ -61,6 +71,36 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
         component = FacebookRecipesApp.getRecipeMainComponent(this, this);
         imageLoader = component.getImageLoader();
         presenter = component.getPresenter();
+    }
+
+    private void setupImageLoader() {
+        RequestListener glideRequestListener = new RequestListener() {
+            @Override
+            public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
+                presenter.imageError(e.getLocalizedMessage());
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
+                presenter.imageReady();
+                return false;
+            }
+        };
+        imageLoader.setOnFinishedImageLoadingListener(glideRequestListener);
+    }
+
+    private void setupGestureDetector() {
+
+        final SwipeGestureDetector swipeGestureDetector = new SwipeGestureDetector(this);
+        View.OnTouchListener gestureOnTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        };
+
+        imgRecipe.setOnTouchListener(gestureOnTouchListener);
     }
 
     @Override
@@ -82,14 +122,23 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
     }
 
     @OnClick(R.id.imgKeep)
-    void saveImage(){
+    public void onKeep() {
+        Snackbar.make(layoutContainer,"Saving Recpie",Toast.LENGTH_SHORT).show();
+        if (currentRecipe != null) {
+            presenter.saveRecipe(currentRecipe);
+        }
+    }
 
+    @OnClick(R.id.imgDismiss)
+    public void onDismiss() {
+        Snackbar.make(layoutContainer,"Dismissing Recpie",Toast.LENGTH_SHORT).show();
+        presenter.dismissRecipe();
     }
 
     @Override
     public void hideUIElements() {
         //imgRecipe.setVisibility(View.GONE);
-        linearLayout.setVisibility(View.GONE);
+        //linearLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -104,15 +153,14 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
 
     @Override
     public void onRecipeSaved() {
-
+        Snackbar.make(layoutContainer,"Your favoruite recipie saved",Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void setRecipe(Recipe recipe) {
-        this.currentRecipe = currentRecipe;
+        hideProgress();
+        this.currentRecipe = recipe;
         imageLoader.load(imgRecipe,recipe.getImageUrl());
-
-
     }
 
     @Override
@@ -125,5 +173,39 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
     protected void onDestroy() {
         presenter.onDestroy();
         super.onDestroy();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_recipes_main,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id= item.getItemId();
+        switch (id){
+            case R.id.action_list:
+                goToListActivity();
+                break;
+            case R.id.action_logout:
+                logout();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    void goToListActivity(){
+
+    }
+
+    void logout(){
+        LoginManager.getInstance().logOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

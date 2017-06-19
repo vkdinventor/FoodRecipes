@@ -40,20 +40,31 @@ public class RecipeMainPresenterImpl implements RecipeMainPresenter {
     }
 
     @Override
-    public void dismissRecipe() {
-
-
-    }
-
-    @Override
     public void getNextRecipe() {
+        if (this.view != null) {
+            view.hideUIElements();
+            view.showProgress();
+        }
         getNextInteractor.execute();
     }
 
     @Override
     public void saveRecipe(Recipe recipe) {
-        recipe.save();
-        eventBus.post(recipe);
+        if(view != null){
+            view.saveAnimation();
+            view.hideUIElements();
+            view.showProgress();
+        }
+        saveInteractor.execute(recipe);
+    }
+
+    @Override
+    public void dismissRecipe() {
+        if(view != null){
+            view.hideUIElements();
+            view.showProgress();
+        }
+        getNextRecipe();
     }
 
     @Override
@@ -89,6 +100,6 @@ public class RecipeMainPresenterImpl implements RecipeMainPresenter {
 
     @Override
     public RecipeMainView getView() {
-        return null;
+        return view;
     }
 }
