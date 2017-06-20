@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -92,14 +95,14 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
 
     private void setupGestureDetector() {
 
-        final SwipeGestureDetector swipeGestureDetector = new SwipeGestureDetector(this);
+        final GestureDetector gestureDetector = new GestureDetector(this, new SwipeGestureDetector(this));
         View.OnTouchListener gestureOnTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
+                imgRecipe.animate().translationXBy(motionEvent.getX());
+                return  gestureDetector.onTouchEvent(motionEvent);
             }
         };
-
         imgRecipe.setOnTouchListener(gestureOnTouchListener);
     }
 
@@ -143,12 +146,35 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
 
     @Override
     public void saveAnimation() {
-
+        Animation saveAnim = AnimationUtils.loadAnimation(this, R.anim.save_animation);
+        imgRecipe.startAnimation(saveAnim);
+        saveAnim.setAnimationListener(getAnimationListener());
     }
 
     @Override
     public void dismissAnimation() {
+        Animation dismissAnim = AnimationUtils.loadAnimation(this, R.anim.dismiss_animation);
+        imgRecipe.startAnimation(dismissAnim);
+        dismissAnim.setAnimationListener(getAnimationListener());
+    }
 
+    private Animation.AnimationListener getAnimationListener(){
+        return new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                imgRecipe.setImageResource(0);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        };
     }
 
     @Override

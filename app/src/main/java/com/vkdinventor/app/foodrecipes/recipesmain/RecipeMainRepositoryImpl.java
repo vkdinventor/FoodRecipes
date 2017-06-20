@@ -68,7 +68,7 @@ public class RecipeMainRepositoryImpl implements RecipeMainRepository {
 
     @Override
     public void saveRecipe(Recipe recipe) {
-
+        post();
     }
 
     @Override

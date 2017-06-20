@@ -61,6 +61,7 @@ public class RecipeMainPresenterImpl implements RecipeMainPresenter {
     @Override
     public void dismissRecipe() {
         if(view != null){
+            view.dismissAnimation();
             view.hideUIElements();
             view.showProgress();
         }
