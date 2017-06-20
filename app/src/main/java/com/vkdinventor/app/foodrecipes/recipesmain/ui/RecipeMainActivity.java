@@ -58,6 +58,8 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
     @Inject
     RecipeMainPresenter presenter;
 
+    GestureDetector gestureDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,17 +95,15 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
         imageLoader.setOnFinishedImageLoadingListener(glideRequestListener);
     }
 
-    private void setupGestureDetector() {
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        this.gestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
 
-        final GestureDetector gestureDetector = new GestureDetector(this, new SwipeGestureDetector(this));
-        View.OnTouchListener gestureOnTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                imgRecipe.animate().translationXBy(motionEvent.getX());
-                return  gestureDetector.onTouchEvent(motionEvent);
-            }
-        };
-        imgRecipe.setOnTouchListener(gestureOnTouchListener);
+    private void setupGestureDetector() {
+        gestureDetector = new GestureDetector(this, new SwipeGestureDetector(this));
+
     }
 
     @Override
@@ -125,6 +125,7 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
     }
 
     @OnClick(R.id.imgKeep)
+    @Override
     public void onKeep() {
         Snackbar.make(layoutContainer,"Saving Recpie",Toast.LENGTH_SHORT).show();
         if (currentRecipe != null) {
@@ -133,6 +134,7 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
     }
 
     @OnClick(R.id.imgDismiss)
+    @Override
     public void onDismiss() {
         Snackbar.make(layoutContainer,"Dismissing Recpie",Toast.LENGTH_SHORT).show();
         presenter.dismissRecipe();
