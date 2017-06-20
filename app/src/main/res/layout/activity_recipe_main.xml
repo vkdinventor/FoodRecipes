@@ -13,8 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/recipes_main_image_height"
         android:id="@+id/imgRecipe"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -23,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/imgRecipe"
+        android:layout_alignParentBottom="true"
         android:id="@+id/linearLayout">
 
         <ImageButton

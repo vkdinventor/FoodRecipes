@@ -12,8 +12,8 @@ import android.view.MotionEvent;
 
 public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
 
-    private static final int SWIPE_THRESHOLD = 50;
-    private static final int SWIPE_VELOCITY_THRESHOLD = 50;
+    private static final int SWIPE_THRESHOLD = 100;
+    private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
     private SwipeGestureListener listener;
 
@@ -31,10 +31,11 @@ public class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListene
 
         float swipeValue = e2.getX()-e1.getX();
 
-        if(Math.abs(swipeValue) > SWIPE_THRESHOLD  && velocityX > SWIPE_VELOCITY_THRESHOLD){
+        Log.v("vikash","swipe test: swipe value :"+swipeValue+" vleocity :"+velocityX);
 
-            Log.v("vikash","swipe right :"+swipeValue);
+        if(Math.abs(swipeValue) > SWIPE_THRESHOLD  && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD){
             if(swipeValue > 0){
+                Log.v("vikash","swipe right :"+swipeValue);
                 listener.onKeep();
             }else {
                 Log.v("vikash","swipe left to dismiss :" +swipeValue);
