@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.vkdinventor.app.foodrecipes.Entity.Recipe;
+import com.vkdinventor.app.foodrecipes.FacebookRecipesApp;
 import com.vkdinventor.app.foodrecipes.R;
 import com.vkdinventor.app.foodrecipes.libs.GlideImageLoader;
 import com.vkdinventor.app.foodrecipes.libs.GreenRobotEventBus;
@@ -18,6 +19,7 @@ import com.vkdinventor.app.foodrecipes.libs.base.ImageLoader;
 import com.vkdinventor.app.foodrecipes.recipeslist.RecipeListPresenter;
 import com.vkdinventor.app.foodrecipes.recipeslist.RecipeListPresenterImpl;
 import com.vkdinventor.app.foodrecipes.recipeslist.RecipeListRepositoryImpl;
+import com.vkdinventor.app.foodrecipes.recipeslist.di.RecipeListComponent;
 import com.vkdinventor.app.foodrecipes.recipeslist.ui.adapters.OnItemClickListener;
 import com.vkdinventor.app.foodrecipes.recipeslist.ui.adapters.RecipesAdapter;
 
@@ -32,7 +34,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeListActivity extends AppCompatActivity implements RecipeListView {
+public class RecipeListActivity extends AppCompatActivity implements RecipeListView, OnItemClickListener{
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -55,15 +57,32 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
         ButterKnife.bind(this);
-
-
-        com.vkdinventor.app.foodrecipes.libs.base.EventBus eventBus = new GreenRobotEventBus(EventBus.getDefault());
-
-        presenter =  new RecipeListPresenterImpl(eventBus,new RecipeListRepositoryImpl(eventBus),this);
+        setupInjection();
         presenter.onCreate();
         setupAdapter();
         presenter.getRecipes();
 
+    }
+
+    @Override
+    public void onFavClick(Recipe recipe) {
+        recipe.setFavorite(true);
+    }
+
+    @Override
+    public void onItemClick(Recipe recipe) {
+
+    }
+
+    @Override
+    public void onDeleteClick(Recipe recipe) {
+
+    }
+
+    void setupInjection(){
+        RecipeListComponent  recipeListComponent = FacebookRecipesApp.getRecipeListComponent(this, this, this);
+        presenter = recipeListComponent.getRecipeListPresenter();
+        adapter = recipeListComponent.getRecipeListAdapter();
     }
 
     void setupAdapter(){
@@ -71,23 +90,6 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListV
         imageLoader = new GlideImageLoader(Glide.with(this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecipesAdapter(recipeList, imageLoader, new OnItemClickListener() {
-            @Override
-            public void onFavClick(Recipe recipe) {
-                recipe.setFavorite(true);
-            }
-
-            @Override
-            public void onItemClick(Recipe recipe) {
-
-            }
-
-            @Override
-            public void onDeleteClick(Recipe recipe) {
-                recipe.delete();
-            }
-        });
-
         recyclerView.setAdapter(adapter);
     }
 
@@ -104,6 +106,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListV
 
     @Override
     public void recipeDeleted(Recipe recipe) {
+
 
     }
 }
