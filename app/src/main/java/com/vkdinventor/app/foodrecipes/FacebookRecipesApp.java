@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.vkdinventor.app.foodrecipes.libs.di.LibsModule;
 import com.vkdinventor.app.foodrecipes.recipesmain.di.DaggerRecipeMainComponent;
 import com.vkdinventor.app.foodrecipes.recipesmain.di.RecipeMainComponent;
@@ -23,6 +24,7 @@ public class FacebookRecipesApp extends Application {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        FlowManager.init(this);
     }
 
     public static RecipeMainComponent getRecipeMainComponent(RecipeMainView view, Activity activity){

@@ -21,11 +21,14 @@ import android.widget.Toast;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.login.LoginManager;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.vkdinventor.app.foodrecipes.Entity.Recipe;
 import com.vkdinventor.app.foodrecipes.FacebookRecipesApp;
 import com.vkdinventor.app.foodrecipes.R;
 import com.vkdinventor.app.foodrecipes.UI.login.LoginActivity;
 import com.vkdinventor.app.foodrecipes.libs.base.ImageLoader;
+import com.vkdinventor.app.foodrecipes.recipeslist.ui.RecipeListActivity;
 import com.vkdinventor.app.foodrecipes.recipesmain.RecipeMainPresenter;
 import com.vkdinventor.app.foodrecipes.recipesmain.di.RecipeMainComponent;
 
@@ -65,6 +68,7 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_main);
         ButterKnife.bind(this);
+        FlowManager.init(new FlowConfig.Builder(this).build());
         setupInjection();
         setupGestureDetector();
         setupImageLoader();
@@ -181,6 +185,7 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
 
     @Override
     public void onRecipeSaved() {
+        currentRecipe.save();
         Snackbar.make(layoutContainer,"Your favoruite recipie saved",Snackbar.LENGTH_SHORT).show();
     }
 
@@ -188,7 +193,7 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
     public void setRecipe(Recipe recipe) {
         hideProgress();
         this.currentRecipe = recipe;
-        imageLoader.load(imgRecipe,recipe.getImageUrl());
+        imageLoader.load(imgRecipe,recipe.getImageURL());
     }
 
     @Override
@@ -225,7 +230,7 @@ public class RecipeMainActivity extends AppCompatActivity implements RecipeMainV
     }
 
     void goToListActivity(){
-
+        startActivity(new Intent(this, RecipeListActivity.class));
     }
 
     void logout(){

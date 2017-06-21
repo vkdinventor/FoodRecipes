@@ -39,7 +39,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:exported="true" android:name=".recipesmain.ui.RecipeMainActivity"></activity>
+        <activity
+            android:name=".recipesmain.ui.RecipeMainActivity"
+            android:exported="true" />
+        <activity android:name=".recipeslist.ui.RecipeListActivity"></activity>
     </application>
 
 </manifest>

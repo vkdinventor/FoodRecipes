@@ -5,29 +5,26 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.vkdinventor.app.foodrecipes.db.RecipeDatabase;
+import com.vkdinventor.app.foodrecipes.db.RecipesDatabase;
 
 /**
  * Created by einfochips on 15/6/17.
  */
 
-@Table(database = RecipeDatabase.class)
-public class Recipe extends BaseModel{
-
+@Table(database = RecipesDatabase.class)
+public class Recipe extends BaseModel {
     @SerializedName("recipe_id")
-    @PrimaryKey
-    private String recipeId;
+    @PrimaryKey private String recipeId;
 
-    @SerializedName("title")
-   @Column private String title;
+    @Column private String title;
+
+    @SerializedName("image_url")
+    @Column private String imageURL;
 
     @SerializedName("source_url")
-    @Column private String sourceUrl;
-    @SerializedName("image_url")
-    @Column private String imageUrl;
+    @Column private String sourceURL;
 
-    private Boolean favoruite;
-
+    @Column private boolean favorite;
 
     public String getRecipeId() {
         return recipeId;
@@ -45,37 +42,40 @@ public class Recipe extends BaseModel{
         this.title = title;
     }
 
-    public String getSourceUrl() {
-        return sourceUrl;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setSourceUrl(String sourceUrl) {
-        this.sourceUrl = sourceUrl;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getSourceURL() {
+        return sourceURL;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setSourceURL(String sourceURL) {
+        this.sourceURL = sourceURL;
     }
 
-    public Boolean getFavoruite() {
-        return favoruite;
+    public boolean isFavorite() {
+        return favorite;
+    }
+    public boolean getFavorite() {
+        return favorite;
     }
 
-    public void setFavoruite(Boolean favoruite) {
-        this.favoruite = favoruite;
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
-    public boolean equal(Object o){
-        boolean isEqual = false;
-        if(o instanceof Recipe){
-            Recipe recipe = (Recipe)o;
-            isEqual = this.recipeId.equals(recipe.getRecipeId());
+    @Override
+    public boolean equals(Object obj) {
+        boolean equal = false;
+        if (obj instanceof Recipe) {
+            Recipe recipe = (Recipe)obj;
+            equal = this.recipeId.equals(recipe.getRecipeId());
         }
-        return isEqual;
+        return equal;
     }
-
 }
