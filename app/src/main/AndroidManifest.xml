@@ -42,7 +42,10 @@
         <activity
             android:name=".recipesmain.ui.RecipeMainActivity"
             android:exported="true" />
-        <activity android:name=".recipeslist.ui.RecipeListActivity"></activity>
+        <activity android:name=".recipeslist.ui.RecipeListActivity"
+            android:label="Favourite Recipes"
+            android:parentActivityName=".recipesmain.ui.RecipeMainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

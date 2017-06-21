@@ -11,4 +11,6 @@ import java.util.List;
 public interface RecipeListRepository {
 
     void getSavedRecipes();
+    void deleteRecipe(Recipe recipe);
+    void updateRecipe(Recipe recipe);
 }

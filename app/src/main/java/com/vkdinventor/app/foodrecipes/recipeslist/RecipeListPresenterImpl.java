@@ -42,19 +42,31 @@ public class RecipeListPresenterImpl implements RecipeListPresenter {
 
     @Override
     public void removeRecipe(Recipe recipe) {
-
+        repository.deleteRecipe(recipe);
     }
 
     @Override
     public void toggleFavorite(Recipe recipe) {
-
+        boolean isFav =  recipe.getFavorite();
+        recipe.setFavorite(!isFav);
+        repository.updateRecipe(recipe);
     }
 
     @Override
     @Subscribe
     public void onEventMainThread(RecipeListEvent event) {
-        if(event.getType() == RecipeListEvent.LIST){
-            view.setRecipes(event.getRecipeList());
+        int id = event.getType();
+
+        switch (id){
+            case RecipeListEvent.LIST:
+                view.setRecipes(event.getRecipeList());
+                break;
+            case RecipeListEvent.DELETE:
+                view.recipeDeleted(event.getRecipeList().get(0));
+                break;
+            case RecipeListEvent.UPDATE:
+                view.recipeUpdated();
+                break;
         }
     }
 

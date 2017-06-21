@@ -7,6 +7,8 @@ import com.vkdinventor.app.foodrecipes.Entity.Recipe;
 import com.vkdinventor.app.foodrecipes.libs.base.EventBus;
 import com.vkdinventor.app.foodrecipes.recipeslist.events.RecipeListEvent;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +27,21 @@ public class RecipeListRepositoryImpl implements RecipeListRepository{
     public void getSavedRecipes() {
         List<Recipe> recipeList = new Select().from(Recipe.class).queryList();
         post(recipeList);
+    }
+
+    @Override
+    public void deleteRecipe(Recipe recipe) {
+        recipe.delete();
+        RecipeListEvent recipeListEvent = new RecipeListEvent(RecipeListEvent.DELETE,
+                Arrays.asList(recipe));
+        eventBus.post(recipeListEvent);
+    }
+
+    @Override
+    public void updateRecipe(Recipe recipe) {
+        recipe.update();
+        RecipeListEvent recipeListEvent = new RecipeListEvent(RecipeListEvent.UPDATE,null);
+        eventBus.post(recipeListEvent);
     }
 
     void post(List<Recipe> recipeList){
