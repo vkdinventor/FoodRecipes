@@ -54,7 +54,8 @@ public class LoginActivity extends AppCompatActivity {
             }
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(LoginActivity.this, "login error :"+error, Toast.LENGTH_SHORT).show();
+                navigateToMainScreen();
+                Toast.makeText(LoginActivity.this, "Navigating to home page without login :"+error, Toast.LENGTH_SHORT).show();
 
             }
         });
